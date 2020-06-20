@@ -1,0 +1,62 @@
+spring:
+  main:
+    banner-mode: "off"
+    allow-bean-definition-overriding: true
+  
+  application:
+    name: census-zipcode
+
+  profiles:
+    active: ${PROFILE:default}
+
+management:
+  endpoint:
+    beans:
+      enabled: true
+    health:
+      enabled: true
+    
+    metrics:
+      enabled: true
+    
+    prometheus:
+      enabled: true
+
+    loggers:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    
+    tags:
+      application: ${spring.application.name}
+
+server:
+  port: 1401
+
+---
+spring:
+  profiles: default
+        
+
+---
+spring:
+  profiles: consul
+
+  cloud:
+    consul:
+      host: ${CONSUL.IP:localhost}
+      port: ${CONSUL.PORT:8500}
+      
+      discovery:
+        instanceId: "${spring.application.name}:${random.int[1,999999]}"
+      
+      config:
+        enabled: true      
